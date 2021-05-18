@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<style>
+			html,body {
+				background-color: #FFFFFF;
+				height: 100%;
+				width: 100%;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.content {
+				height: 100%;
+				width: 100%;
+			}
+			.scoll{
+				height: 100%;
+				width: 100%;
+			}
+			
+			.main {
+				height: auto;
+				width: 100%;
+				padding-top: 20px;
+			}
+			
+			.title {
+				height: auto;
+				text-align: center;
+				padding: 0 15px;
+				color: #007AFF;
+				font-size: 18px;
+				font-weight: bold;
+				font-family: "微软雅黑";
+			}
+			
+			.title-info {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-orient: horizontal;
+				color: #8f8f94;
+				font-size: 12px;
+				font-weight: 400;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			
+			.title-one {
+				padding-top: 10px;
+				height: 30px;
+			}
+			
+			.title-two {
+				padding-top: 5px;
+				height: 25px;
+			}
+			
+			.laiyuan {
+				line-height: 20px;
+				width: 40%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			
+			.shijian {
+				line-height: 20px;
+				-webkit-flex: 1;
+			}
+			
+			.title-type {
+				width: 40%;
+				line-height: 20px;
+			}
+			
+			.origin {
+				-webkit-flex: 1;
+				text-align: center;
+				line-height: 20px;
+			}
+			
+			.neirong {
+				height: auto;
+				font-size: 14px;
+				padding: 15px 15px 20px;
+				text-indent: 2em;
+				letter-spacing: 1px;
+				line-height: 25px;
+			}
+			
+			body {
+				background: #fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<div class='scoll'>
+				<div class="main">
+					<div class="title"></div>
+					<div class="title-info title-one">
+						<div class="laiyuan"></div>
+						<div class="shijian"></div>
+					</div>
+					<div class="title-info title-two">
+						<div class="title-type medium"></div>
+						<div class="title-type feeling"></div>
+						<div class="origin"></div>
+					</div>
+					<div class="neirong">
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/jquery-3.0.0.js"></script>
+		<script type="text/javascript" src="../js/common.js" ></script>
+		<script type="text/javascript">
+			var articleid;
+			$.ready(
+				geturl()
+			);
+			var kk = $("title").html()
+			function geturl() {
+				var aQuery = window.location.href.split("?"); //取得Get参数
+				var aGET = new Array();
+				if(aQuery.length > 1) {
+					var aBuf = aQuery[1].split("&");
+					var aTmp = aBuf[0].split("="); //分离key与Value
+					articleid = aTmp[1];
+				};
+				initialise();
+			}
+
+			function initialise() {
+				$.ajax({
+					url:baseUrl + "selectArticleDetailById", 
+					data: {
+						articleid: articleid
+					},
+					dataType: "json",
+					type: "GET",
+					success: function(data) {
+						$(".title").html(data.object.tittle);
+						$("title").html(data.object.tittle)
+						$(".laiyuan").html("来源：" + data.object.dataSource);
+						if(data.object.author == null || data.object.author == "") {
+							$(".feeling").html("作者：匿名");
+						} else {
+							$(".feeling").html("作者：" + data.object.author);
+						}
+						$(".medium").html("媒体类型：" + data.object.formats);
+						$(".shijian").html("发布时间：" + data.object.edtime);
+						$(".neirong").html(data.object.content);
+					},
+					error: function(data) {
+					}
+				})
+			};
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayside.app.opinion.mobile.war.publicopinion.dao.SubjectMAarticleMapper">
+  <resultMap id="BaseResultMap" type="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="subjectid" jdbcType="VARCHAR" property="subjectid" />
+    <result column="articleid" jdbcType="VARCHAR" property="articleid" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="keyword_rule" jdbcType="VARCHAR" property="keywordRule" />
+    <result column="reportinfo" jdbcType="BIT" property="reportinfo" />
+    <result column="attention" jdbcType="BIT" property="attention" />
+    <result column="warning" jdbcType="BIT" property="warning" />
+    <result column="readsign" jdbcType="BIT" property="readsign" />
+    <result column="briefing" jdbcType="BIT" property="briefing" />
+    <result column="emotion" jdbcType="VARCHAR" property="emotion" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="pubdate" jdbcType="TIMESTAMP" property="pubdate" />
+    <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+    <result column="formats" jdbcType="VARCHAR" property="formats" />
+    <result column="attentiontime" jdbcType="TIMESTAMP" property="attentiontime" />
+    <result column="send" jdbcType="BIT" property="send" />
+    <result column="warning_word" jdbcType="VARCHAR" property="warningWord" />
+    <result column="collection" jdbcType="INTEGER" property="collection" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, subjectid, articleid, userid, keyword_rule, reportinfo, attention, warning, readsign, 
+    briefing, emotion, updatetime, pubdate, data_source, formats, attentiontime, send, 
+    warning_word, collection
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bs_subject_m_article
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+    <select id="selectSimidsById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select simids
+    from bs_subject_m_article
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+    <select id="selectDetailInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bs_subject_m_article
+    where id = #{id,jdbcType=VARCHAR} and articleid = #{articleid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bs_subject_m_article
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    insert into bs_subject_m_article (id, subjectid, articleid, 
+      userid, keyword_rule, reportinfo, 
+      attention, warning, readsign, briefing, 
+      emotion, updatetime, pubdate, 
+      data_source, formats, attentiontime, 
+      send, warning_word, collection)
+    values (#{id,jdbcType=VARCHAR}, #{subjectid,jdbcType=VARCHAR}, #{articleid,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=VARCHAR}, #{keywordRule,jdbcType=VARCHAR}, #{reportinfo,jdbcType=BIT}, 
+      #{attention,jdbcType=BIT}, #{warning,jdbcType=BIT}, #{readsign,jdbcType=BIT}, #{briefing,jdbcType=BIT}, 
+      #{emotion,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, #{pubdate,jdbcType=TIMESTAMP}, 
+      #{dataSource,jdbcType=VARCHAR}, #{formats,jdbcType=VARCHAR}, #{attentiontime,jdbcType=TIMESTAMP}, 
+      #{send,jdbcType=BIT}, #{warningWord,jdbcType=VARCHAR}, #{collection,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    insert into bs_subject_m_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="subjectid != null">
+        subjectid,
+      </if>
+      <if test="articleid != null">
+        articleid,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="keywordRule != null">
+        keyword_rule,
+      </if>
+      <if test="reportinfo != null">
+        reportinfo,
+      </if>
+      <if test="attention != null">
+        attention,
+      </if>
+      <if test="warning != null">
+        warning,
+      </if>
+      <if test="readsign != null">
+        readsign,
+      </if>
+      <if test="briefing != null">
+        briefing,
+      </if>
+      <if test="emotion != null">
+        emotion,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+      <if test="pubdate != null">
+        pubdate,
+      </if>
+      <if test="dataSource != null">
+        data_source,
+      </if>
+      <if test="formats != null">
+        formats,
+      </if>
+      <if test="attentiontime != null">
+        attentiontime,
+      </if>
+      <if test="send != null">
+        send,
+      </if>
+      <if test="warningWord != null">
+        warning_word,
+      </if>
+      <if test="collection != null">
+        collection,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        #{subjectid,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordRule != null">
+        #{keywordRule,jdbcType=VARCHAR},
+      </if>
+      <if test="reportinfo != null">
+        #{reportinfo,jdbcType=BIT},
+      </if>
+      <if test="attention != null">
+        #{attention,jdbcType=BIT},
+      </if>
+      <if test="warning != null">
+        #{warning,jdbcType=BIT},
+      </if>
+      <if test="readsign != null">
+        #{readsign,jdbcType=BIT},
+      </if>
+      <if test="briefing != null">
+        #{briefing,jdbcType=BIT},
+      </if>
+      <if test="emotion != null">
+        #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pubdate != null">
+        #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null">
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="formats != null">
+        #{formats,jdbcType=VARCHAR},
+      </if>
+      <if test="attentiontime != null">
+        #{attentiontime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="send != null">
+        #{send,jdbcType=BIT},
+      </if>
+      <if test="warningWord != null">
+        #{warningWord,jdbcType=VARCHAR},
+      </if>
+       <if test="collection != null">
+        #{collection,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    update bs_subject_m_article
+    <set>
+      <if test="subjectid != null">
+        subjectid = #{subjectid,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        articleid = #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordRule != null">
+        keyword_rule = #{keywordRule,jdbcType=VARCHAR},
+      </if>
+      <if test="reportinfo != null">
+        reportinfo = #{reportinfo,jdbcType=BIT},
+      </if>
+      <if test="attention != null">
+        attention = #{attention,jdbcType=BIT},
+      </if>
+      <if test="warning != null">
+        warning = #{warning,jdbcType=BIT},
+      </if>
+      <if test="readsign != null">
+        readsign = #{readsign,jdbcType=BIT},
+      </if>
+      <if test="briefing != null">
+        briefing = #{briefing,jdbcType=BIT},
+      </if>
+      <if test="emotion != null">
+        emotion = #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pubdate != null">
+        pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null">
+        data_source = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="formats != null">
+        formats = #{formats,jdbcType=VARCHAR},
+      </if>
+      <if test="attentiontime != null">
+        attentiontime = #{attentiontime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="send != null">
+        send = #{send,jdbcType=BIT},
+      </if>
+      <if test="warningWord != null">
+        warning_word = #{warningWord,jdbcType=VARCHAR},
+      </if>
+      <if test="collection != null">
+        collection = #{collection,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    update bs_subject_m_article
+    set subjectid = #{subjectid,jdbcType=VARCHAR},
+      articleid = #{articleid,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=VARCHAR},
+      keyword_rule = #{keywordRule,jdbcType=VARCHAR},
+      reportinfo = #{reportinfo,jdbcType=BIT},
+      attention = #{attention,jdbcType=BIT},
+      warning = #{warning,jdbcType=BIT},
+      readsign = #{readsign,jdbcType=BIT},
+      briefing = #{briefing,jdbcType=BIT},
+      emotion = #{emotion,jdbcType=VARCHAR},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      data_source = #{dataSource,jdbcType=VARCHAR},
+      formats = #{formats,jdbcType=VARCHAR},
+      attentiontime = #{attentiontime,jdbcType=TIMESTAMP},
+      send = #{send,jdbcType=BIT},
+      warning_word = #{warningWord,jdbcType=VARCHAR},
+      collection = #{collection,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <update id="updateCollection" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectMAarticle">
+    update bs_subject_m_article
+    set
+      collection = #{collection,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

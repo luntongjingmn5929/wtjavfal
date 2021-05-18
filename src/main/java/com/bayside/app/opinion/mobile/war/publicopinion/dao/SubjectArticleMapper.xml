@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayside.app.opinion.mobile.war.publicopinion.dao.SubjectArticleMapper">
+  <resultMap id="BaseResultMap" type="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="tittle" jdbcType="VARCHAR" property="tittle" />
+    <result column="pubdate" jdbcType="TIMESTAMP" property="pubdate" />
+    <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="emotion" jdbcType="VARCHAR" property="emotion" />
+    <result column="content_type" jdbcType="VARCHAR" property="contentType" />
+    <result column="formats" jdbcType="VARCHAR" property="formats" />
+    <result column="readcount" jdbcType="INTEGER" property="readcount" />
+    <result column="commtcount" jdbcType="INTEGER" property="commtcount" />
+    <result column="repeatcount" jdbcType="INTEGER" property="repeatcount" />
+    <result column="aggreecount" jdbcType="INTEGER" property="aggreecount" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="similarnum" jdbcType="INTEGER" property="similarnum" />
+    <result column="relate_word" jdbcType="INTEGER" property="relateWord" />
+    <result column="opinion_word" jdbcType="INTEGER" property="opinionWord" />
+    <result column="warning_word" jdbcType="INTEGER" property="warningWord" />
+    <result column="newsindex" jdbcType="INTEGER" property="newsindex" />
+    <result column="search_num" jdbcType="INTEGER" property="searchNum" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="view_point" jdbcType="VARCHAR" property="viewPoint" />
+    <result column="domain" jdbcType="VARCHAR" property="domain" />
+    <result column="simhashcode" jdbcType="VARCHAR" property="simhashcode" />
+     <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="negative_word" jdbcType="VARCHAR" property="negativeWord" />
+    <result column="positive_word" jdbcType="VARCHAR" property="positiveWord" />
+    <result column="imgUrl" jdbcType="VARCHAR" property="imgurl" />
+    <result column="abstrac" jdbcType="VARCHAR" property="abstrac" />
+    <result column="html" jdbcType="VARCHAR" property="html" />
+  </resultMap>
+  <resultMap id="ResultMap" type="com.bayside.app.opinion.mobile.war.publicopinion.bo.SubJectArticleBo" extends="BaseResultMap">
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="negative_word" jdbcType="VARCHAR" property="negativeWord" />
+    <result column="positive_word" jdbcType="VARCHAR" property="positiveWord" />
+    <result column="imgUrl" jdbcType="VARCHAR" property="imgurl" />
+    <result column="abstrac" jdbcType="VARCHAR" property="abstrac" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, tittle, pubdate, data_source, author, emotion, content_type, formats, readcount, 
+    commtcount, repeatcount, aggreecount, score, similarnum, relate_word, opinion_word, html,
+    warning_word, newsindex, search_num, updatetime, view_point, domain, simhashcode,content, url, negative_word, positive_word, imgUrl, abstrac
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+   
+    from bs_subject_article
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+   <select id="selectPublicArticle" resultMap="ResultMap" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.bo.SubJectArticleBo" >
+    SELECT a.`ID`, a.tittle, a.pubdate, a.data_source, a.author, a.content_type, a.formats, a.readcount, 
+    a.commtcount, a.repeatcount, a.aggreecount, a.score, a.similarnum, a.relate_word, a.opinion_word, 
+    a.negative_word, a.positive_word, a.warning_word, a.newsindex, a.search_num, a.updatetime, a.content, 
+    a.url, m.id mid,m.subjectid, m.articleid, m.userid, m.keyword_rule, m.reportinfo, m.attention, m.warning, m.readsign, m.emotion, m.warning,
+    briefing FROM bs_subject_article AS a,
+    (select * from bs_subject_m_article as fa 
+      <where>
+          fa.`userid`= #{userid,jdbcType=VARCHAR}
+          <if test="subjectid != null and subjectid !=''" >
+           and fa.subjectid = #{subjectid,jdbcType=VARCHAR}
+          </if>
+           <if test="warning != null" >
+           and fa.warning = #{warning,jdbcType=BIT}
+          </if>
+          <if test="readsign != null" >
+           and fa.readsign = #{readsign,jdbcType=BIT}
+          </if>
+          <if test="emotion != null and emotion!=''" >
+           and fa.emotion = #{emotion,jdbcType=VARCHAR}
+          </if>
+              AND fa.pubdate &lt; NOW()   
+          <if test="uptime != null and uptime!=''">
+          order by fa.updatetime desc
+          </if>
+            <if test="pubtime != null and pubtime!=''">
+             order by fa.pubdate desc
+          </if>     
+          </where>
+    ) AS m 
+    WHERE
+     m.`articleid` = a.`ID` 
+      <if test="uptime != null and uptime!=''">
+          order by a.updatetime desc
+          </if>
+            <if test="pubtime != null and pubtime!=''">
+          order by a.pubdate desc
+          </if>     
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bs_subject_article
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    insert into bs_subject_article (ID, tittle, pubdate, 
+      data_source, author, emotion, 
+      content_type, formats, readcount, 
+      commtcount, repeatcount, aggreecount, 
+      score, similarnum, relate_word, 
+      opinion_word, warning_word, newsindex, 
+      search_num, updatetime, view_point, 
+      domain, simhashcode, content, 
+      url, negative_word, positive_word, 
+      imgUrl, abstrac)
+    values (#{id,jdbcType=VARCHAR}, #{tittle,jdbcType=VARCHAR}, #{pubdate,jdbcType=TIMESTAMP}, 
+      #{dataSource,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{emotion,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=VARCHAR}, #{formats,jdbcType=VARCHAR}, #{readcount,jdbcType=INTEGER}, 
+      #{commtcount,jdbcType=INTEGER}, #{repeatcount,jdbcType=INTEGER}, #{aggreecount,jdbcType=INTEGER}, 
+      #{score,jdbcType=INTEGER}, #{similarnum,jdbcType=INTEGER}, #{relateWord,jdbcType=INTEGER}, 
+      #{opinionWord,jdbcType=INTEGER}, #{warningWord,jdbcType=INTEGER}, #{newsindex,jdbcType=INTEGER}, 
+      #{searchNum,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}, #{viewPoint,jdbcType=VARCHAR}, 
+      #{domain,jdbcType=VARCHAR}, #{simhashcode,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{negativeWord,jdbcType=VARCHAR}, #{positiveWord,jdbcType=VARCHAR}, 
+      #{imgurl,jdbcType=VARCHAR}, #{abstrac,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    insert into bs_subject_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="tittle != null">
+        tittle,
+      </if>
+      <if test="pubdate != null">
+        pubdate,
+      </if>
+      <if test="dataSource != null">
+        data_source,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="emotion != null">
+        emotion,
+      </if>
+      <if test="contentType != null">
+        content_type,
+      </if>
+      <if test="formats != null">
+        formats,
+      </if>
+      <if test="readcount != null">
+        readcount,
+      </if>
+      <if test="commtcount != null">
+        commtcount,
+      </if>
+      <if test="repeatcount != null">
+        repeatcount,
+      </if>
+      <if test="aggreecount != null">
+        aggreecount,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="similarnum != null">
+        similarnum,
+      </if>
+      <if test="relateWord != null">
+        relate_word,
+      </if>
+      <if test="opinionWord != null">
+        opinion_word,
+      </if>
+      <if test="warningWord != null">
+        warning_word,
+      </if>
+      <if test="newsindex != null">
+        newsindex,
+      </if>
+      <if test="searchNum != null">
+        search_num,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+      <if test="viewPoint != null">
+        view_point,
+      </if>
+      <if test="domain != null">
+        domain,
+      </if>
+      <if test="simhashcode != null">
+        simhashcode,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="negativeWord != null">
+        negative_word,
+      </if>
+      <if test="positiveWord != null">
+        positive_word,
+      </if>
+      <if test="imgurl != null">
+        imgUrl,
+      </if>
+      <if test="abstrac != null">
+        abstrac,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null">
+        #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="pubdate != null">
+        #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null">
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="emotion != null">
+        #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="formats != null">
+        #{formats,jdbcType=VARCHAR},
+      </if>
+      <if test="readcount != null">
+        #{readcount,jdbcType=INTEGER},
+      </if>
+      <if test="commtcount != null">
+        #{commtcount,jdbcType=INTEGER},
+      </if>
+      <if test="repeatcount != null">
+        #{repeatcount,jdbcType=INTEGER},
+      </if>
+      <if test="aggreecount != null">
+        #{aggreecount,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="similarnum != null">
+        #{similarnum,jdbcType=INTEGER},
+      </if>
+      <if test="relateWord != null">
+        #{relateWord,jdbcType=INTEGER},
+      </if>
+      <if test="opinionWord != null">
+        #{opinionWord,jdbcType=INTEGER},
+      </if>
+      <if test="warningWord != null">
+        #{warningWord,jdbcType=INTEGER},
+      </if>
+      <if test="newsindex != null">
+        #{newsindex,jdbcType=INTEGER},
+      </if>
+      <if test="searchNum != null">
+        #{searchNum,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewPoint != null">
+        #{viewPoint,jdbcType=VARCHAR},
+      </if>
+      <if test="domain != null">
+        #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="simhashcode != null">
+        #{simhashcode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="negativeWord != null">
+        #{negativeWord,jdbcType=VARCHAR},
+      </if>
+      <if test="positiveWord != null">
+        #{positiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="abstrac != null">
+        #{abstrac,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    update bs_subject_article
+    <set>
+      <if test="tittle != null">
+        tittle = #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="pubdate != null">
+        pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null">
+        data_source = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="emotion != null">
+        emotion = #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="formats != null">
+        formats = #{formats,jdbcType=VARCHAR},
+      </if>
+      <if test="readcount != null">
+        readcount = #{readcount,jdbcType=INTEGER},
+      </if>
+      <if test="commtcount != null">
+        commtcount = #{commtcount,jdbcType=INTEGER},
+      </if>
+      <if test="repeatcount != null">
+        repeatcount = #{repeatcount,jdbcType=INTEGER},
+      </if>
+      <if test="aggreecount != null">
+        aggreecount = #{aggreecount,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="similarnum != null">
+        similarnum = #{similarnum,jdbcType=INTEGER},
+      </if>
+      <if test="relateWord != null">
+        relate_word = #{relateWord,jdbcType=INTEGER},
+      </if>
+      <if test="opinionWord != null">
+        opinion_word = #{opinionWord,jdbcType=INTEGER},
+      </if>
+      <if test="warningWord != null">
+        warning_word = #{warningWord,jdbcType=INTEGER},
+      </if>
+      <if test="newsindex != null">
+        newsindex = #{newsindex,jdbcType=INTEGER},
+      </if>
+      <if test="searchNum != null">
+        search_num = #{searchNum,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewPoint != null">
+        view_point = #{viewPoint,jdbcType=VARCHAR},
+      </if>
+      <if test="domain != null">
+        domain = #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="simhashcode != null">
+        simhashcode = #{simhashcode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="negativeWord != null">
+        negative_word = #{negativeWord,jdbcType=VARCHAR},
+      </if>
+      <if test="positiveWord != null">
+        positive_word = #{positiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        imgUrl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="abstrac != null">
+        abstrac = #{abstrac,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    update bs_subject_article
+    set tittle = #{tittle,jdbcType=VARCHAR},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      data_source = #{dataSource,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      emotion = #{emotion,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      formats = #{formats,jdbcType=VARCHAR},
+      readcount = #{readcount,jdbcType=INTEGER},
+      commtcount = #{commtcount,jdbcType=INTEGER},
+      repeatcount = #{repeatcount,jdbcType=INTEGER},
+      aggreecount = #{aggreecount,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      similarnum = #{similarnum,jdbcType=INTEGER},
+      relate_word = #{relateWord,jdbcType=INTEGER},
+      opinion_word = #{opinionWord,jdbcType=INTEGER},
+      warning_word = #{warningWord,jdbcType=INTEGER},
+      newsindex = #{newsindex,jdbcType=INTEGER},
+      search_num = #{searchNum,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      view_point = #{viewPoint,jdbcType=VARCHAR},
+      domain = #{domain,jdbcType=VARCHAR},
+      simhashcode = #{simhashcode,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      negative_word = #{negativeWord,jdbcType=VARCHAR},
+      positive_word = #{positiveWord,jdbcType=VARCHAR},
+      imgUrl = #{imgurl,jdbcType=VARCHAR},
+      abstrac = #{abstrac,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayside.app.opinion.mobile.war.publicopinion.model.SubjectArticle">
+    update bs_subject_article
+    set tittle = #{tittle,jdbcType=VARCHAR},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      data_source = #{dataSource,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      emotion = #{emotion,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      formats = #{formats,jdbcType=VARCHAR},
+      readcount = #{readcount,jdbcType=INTEGER},
+      commtcount = #{commtcount,jdbcType=INTEGER},
+      repeatcount = #{repeatcount,jdbcType=INTEGER},
+      aggreecount = #{aggreecount,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      similarnum = #{similarnum,jdbcType=INTEGER},
+      relate_word = #{relateWord,jdbcType=INTEGER},
+      opinion_word = #{opinionWord,jdbcType=INTEGER},
+      warning_word = #{warningWord,jdbcType=INTEGER},
+      newsindex = #{newsindex,jdbcType=INTEGER},
+      search_num = #{searchNum,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      view_point = #{viewPoint,jdbcType=VARCHAR},
+      domain = #{domain,jdbcType=VARCHAR},
+      simhashcode = #{simhashcode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
